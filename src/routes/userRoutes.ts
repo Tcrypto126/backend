@@ -9,7 +9,11 @@ const router = Router();
 router.get('/profile', auth, getProfile);
 router.put('/profile', auth, validateUpdateProfile, updateProfile);
 
-router.delete('/delete', auth, deleteUser);
+// By admin
 router.get('/all-user', auth, getAllUser);
+router.delete('/delete', auth, deleteUser);
+
+// Handle balance
+
 
 export default router;

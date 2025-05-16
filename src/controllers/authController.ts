@@ -38,7 +38,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       });
     }
 
-    if (email == admin_email && password == admin_pass) {
+    if (email == admin_email) {
       role = UserRole.ADMIN;
     } else {
       role = UserRole.USER;

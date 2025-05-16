@@ -2,37 +2,50 @@ import prisma from '../lib/prisma';
 import { TransactionStatus, TransactionType } from '../generated/prisma';
 
 export interface TransactionCreationAttrs {
-  wallet_id: string;
+  amount: string;
   type: TransactionType;
-  amount: number;
-  currency: string;
   status?: TransactionStatus;
-  reference_id?: string;
-  recipient_wallet_id?: string;
+  sender_id?: string;
+  recipient_id?: string;
   description?: string;
 }
 
 export class TransactionModel {
   static async create(transactionData: TransactionCreationAttrs) {
-    const { 
-      wallet_id, 
-      type, 
-      amount, 
-      currency, 
-      status = TransactionStatus.PENDING,
-      reference_id = null,
-      recipient_wallet_id = null,
-      description = null
+    const {
+      amount,
+      type,
+      status,
+      sender_id,
+      recipient_id,
+      description
     } = transactionData;
-    
+
+    const amountNumber = parseFloat(amount);
+
     return prisma.transaction.create({
       data: {
+        amount: amountNumber,
         type,
-        amount,
-        status,
-        description
+        status: type == TransactionType.WITHDRAWAL ? TransactionStatus.PENDING : TransactionStatus.COMPLETED,
+        sender_id,
+        recipient_id,
+        description,
       }
     });
+  }
+
+  static async findMany(senderId: string, recipientId: string) {
+    return prisma.transaction.findMany({
+      where: {
+        sender_id: senderId,
+        recipient_id: recipientId
+      }
+    })
+  }
+
+  static async findAllTransaction() {
+    return prisma.transaction.findMany();
   }
 
   static async findById(id: string) {

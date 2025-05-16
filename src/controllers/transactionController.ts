@@ -5,49 +5,136 @@ import { AuthRequest } from '../middlewares/auth';
 import { ApiError } from '../middlewares/errorHandler';
 import { fetchOxapayTransactions } from '../services/oxapayService';
 import { sendEmail } from '../utils/emailService';
+import { UserModel } from '../models/User';
+
+const admin_email: string = process.env.ADMIN_EMAIL || "a@a.com";
+const admin_pass: string = process.env.ADMIN_PASSWORD || "Asd123!@#";
+
+// Create a specific transaction
+export const createTransaction = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Not authorized"
+            });
+        }
+
+        // Get user
+        const user = await UserModel.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const {
+            amount,
+            type,
+            status,
+            sender_id,
+            recipient_id,
+            description
+        } = req.body;
+
+        // Get transaction
+        const transaction = await TransactionModel.create({ amount, type, status, sender_id, recipient_id, description });
+
+        res.status(201).json({
+            success: true,
+            transaction
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 // Get a specific transaction
-// export const getTransaction = async (req: AuthRequest, res: Response, next: NextFunction) => {
-//   try {
-//     if (!req.user) {
-//       const error: ApiError = new Error('Not authorized');
-//       error.statusCode = 401;
-//       throw error;
-//     }
+export const getTransaction = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Not authorized"
+            });
+        }
 
-//     const { id } = req.params;
+        const { id } = req.params;
 
-//     // Get user wallet
-//     const wallet = await WalletModel.findByUserId(req.user.id);
-//     if (!wallet) {
-//       const error: ApiError = new Error('Wallet not found');
-//       error.statusCode = 404;
-//       throw error;
-//     }
+        // Get user
+        const user = await UserModel.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
 
-//     // Get transaction
-//     const transaction = await TransactionModel.findById(id);
-//     if (!transaction) {
-//       const error: ApiError = new Error('Transaction not found');
-//       error.statusCode = 404;
-//       throw error;
-//     }
+        // Get transaction
+        const transaction = await TransactionModel.findMany(user.id, user.id);
+        if (!transaction) {
+            return res.status(404).json({
+                success: false,
+                message: "Transaction not found"
+            });
+        }
 
-//     // Check if transaction belongs to the user
-//     if (transaction.wallet_id !== wallet.id && transaction.recipient_wallet_id !== wallet.id) {
-//       const error: ApiError = new Error('Access denied');
-//       error.statusCode = 403;
-//       throw error;
-//     }
+        res.status(200).json({
+            success: true,
+            transaction
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
-//     res.status(200).json({
-//       success: true,
-//       transaction
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+export const getAllTransaction = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Not authorized"
+            });
+        }
+
+        const { id } = req.params;
+
+        // Get user
+        const user = await UserModel.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (user.email !== admin_email) {
+            return res.status(403).json({
+                success: false,
+                message: "You do not have admin permission"
+            })
+        }
+
+        // Get all transaction
+        const transactions = await TransactionModel.findAllTransaction();
+        if (!transactions) {
+            return res.status(404).json({
+                success: false,
+                message: "Any transaction not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            transactions
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 
 // Get transaction history
 // export const getTransactionHistory = async (req: AuthRequest, res: Response, next: NextFunction) => {

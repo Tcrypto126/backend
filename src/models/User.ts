@@ -11,6 +11,9 @@ export interface UserCreationAttrs {
 export interface UserUpdateAttrs {
   username?: string;
   full_name?: string;
+  avatar?: string;
+  password?: string;
+  bonus?: number;
 }
 
 export interface ResetTokenAttrs {
@@ -73,13 +76,21 @@ export class UserModel {
   }
 
   static async updateProfile(id: string, updates: Partial<UserUpdateAttrs>) {
+    let hashedPassword;
+    if (updates.password) {
+      hashedPassword = await bcrypt.hash(updates.password, 10);
+    }
+
     return prisma.user.update({
       where: {
         id
       },
       data: {
-        username: updates.username,
-        full_name: updates.full_name
+        username: updates?.username,
+        full_name: updates?.full_name,
+        avatar: updates?.avatar,
+        password: hashedPassword,
+        bonus: updates?.bonus
       }
     });
   }

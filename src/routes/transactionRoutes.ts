@@ -1,16 +1,21 @@
-// import { Router } from 'express';
-// import { 
-//   // getTransaction,
-//   // getTransactionHistory,
-//   // syncOxapayTransactions
-// } from '../controllers/transactionController';
-// import { auth } from '../middlewares/auth';
+import { Router } from 'express';
+import {
+    createTransaction,
+    getTransaction,
+    getAllTransaction,
+    //   getTransactionHistory,
+    //   syncOxapayTransactions
+} from '../controllers/transactionController';
+import { auth } from '../middlewares/auth';
 
-// const router = Router();
+const router = Router();
 
-// // Transaction routes
-// router.get('/:id', auth, getTransaction);
-// // router.get('/', auth, getTransactionHistory);
-// // router.post('/sync-oxapay', auth, syncOxapayTransactions);
+// Transaction routes
+router.post('/create', auth, createTransaction);
+router.get('/transaction', auth, getTransaction);
+router.get('/all-transaction', auth, getAllTransaction)
 
-// export default router;
+// router.get('/', auth, getTransactionHistory);
+// router.post('/sync-oxapay', auth, syncOxapayTransactions);
+
+export default router;
