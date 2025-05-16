@@ -14,6 +14,7 @@ export interface UserUpdateAttrs {
   avatar?: string;
   password?: string;
   bonus?: number;
+  balance?: number;
 }
 
 export interface ResetTokenAttrs {
@@ -90,7 +91,8 @@ export class UserModel {
         full_name: updates?.full_name,
         avatar: updates?.avatar,
         password: hashedPassword,
-        bonus: updates?.bonus
+        bonus: updates?.bonus,
+        balance: updates?.balance,
       }
     });
   }

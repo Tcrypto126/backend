@@ -12,8 +12,8 @@ const router = Router();
 
 // Transaction routes
 router.post('/create', auth, createTransaction);
-router.get('/transaction', auth, getTransaction);
-router.get('/all-transaction', auth, getAllTransaction)
+router.get('/get-transaction', auth, getTransaction);
+router.get('/all-transaction', auth, getAllTransaction);
 
 // router.get('/', auth, getTransactionHistory);
 // router.post('/sync-oxapay', auth, syncOxapayTransactions);

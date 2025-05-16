@@ -12,3 +12,10 @@ export const validateUpdateProfile = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Full name must be between 2 and 50 characters')
 ];
+
+export const validateEmail = [
+  body('email')
+    .isEmail()
+    .withMessage('Please enter a valid email')
+    .normalizeEmail()
+]

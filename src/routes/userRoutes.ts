@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { getProfile, updateProfile, getAllUser, deleteUser } from '../controllers/userController';
+import { getProfile, updateProfile, getAllUser, deleteUser, updateBonus, updateBalance } from '../controllers/userController';
 import { auth } from '../middlewares/auth';
-import { validateUpdateProfile } from '../validators/userValidators';
+import { validateUpdateProfile, validateEmail } from '../validators/userValidators';
 
 const router = Router();
 
@@ -13,7 +13,9 @@ router.put('/profile', auth, validateUpdateProfile, updateProfile);
 router.get('/all-user', auth, getAllUser);
 router.delete('/delete', auth, deleteUser);
 
-// Handle balance
+// Handle balance and bonus
+router.post('/balance', auth, updateBalance);
+router.post('/bonus', auth, validateEmail, updateBonus);
 
 
 export default router;

@@ -207,7 +207,7 @@ export const getAllTransaction = async (req: AuthRequest, res: Response, next: N
 //     }
 
 //     // This would be a call to the actual Oxapay API
-//     const externalTransactions = await fetchOxapayTransactions(req.user.id);
+    // const externalTransactions = await fetchOxapayTransactions(req.user.id);
 
 //     // Process each transaction
 //     const processedTransactions = [];
