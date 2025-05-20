@@ -1,9 +1,15 @@
-# Fullstack React + Express + PostgreSQL App
+# Express + Prisma + PostgreSQL Backend
+
+## Feature
+- user authentication and authorization
+- transaction create, update, remove
+- get the uer list and update by admin
+
 
 ## Overview
-This is a basic fullstack application using:
-- **React** for frontend
+This is a basic backend application using:
 - **Express** for backend API
+- **Prisma** for Schema
 - **PostgreSQL** for database
 
 ---
@@ -18,16 +24,12 @@ This is a basic fullstack application using:
 ## Setup Steps
 
 ### 1. Clone the repository
-```bash  
-git clone https://github.com/Tcrypto126/crypto-vault-wallet.git  
-cd crypto-vault-wallet  
+```bash
+git clone https://github.com/Tcrypto126/express-backend.git 
 
-# Navigate to frontend folder  
-cd frontend
-npm install
-npm run dev
+create crypto-vault database on pgAdmin
 
 # Navigate to backend folder  
-cd backend
+cd express-backend
 npm install
 npm run dev
